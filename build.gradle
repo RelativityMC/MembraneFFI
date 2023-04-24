@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.ishland'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.icedland.iced:iced-x86:1.18.0'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.14.0'
+}
+
+test {
+    useJUnitPlatform()
+    workingDir project.buildDir
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    jvmArgs "-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UnlockDiagnosticVMOptions", "-XX:PrintAssemblyOptions=intel", "-XX:CompileCommand=print,com.ishland.jvmciffi.test.*::*"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '--add-modules' << 'jdk.internal.vm.ci'
+    options.compilerArgs << '--add-exports' << 'jdk.internal.vm.ci/jdk.vm.ci.code=ALL-UNNAMED'
+    options.compilerArgs << '--add-exports' << 'jdk.internal.vm.ci/jdk.vm.ci.code.site=ALL-UNNAMED'
+    options.compilerArgs << '--add-exports' << 'jdk.internal.vm.ci/jdk.vm.ci.hotspot=ALL-UNNAMED'
+    options.compilerArgs << '--add-exports' << 'jdk.internal.vm.ci/jdk.vm.ci.meta=ALL-UNNAMED'
+    options.compilerArgs << '--add-exports' << 'jdk.internal.vm.ci/jdk.vm.ci.runtime=ALL-UNNAMED'
+}
+
+test {
+    useJUnitPlatform()
+}
