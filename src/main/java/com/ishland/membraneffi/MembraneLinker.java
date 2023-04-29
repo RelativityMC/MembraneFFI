@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-public class Linker {
+public class MembraneLinker {
 
     static {
         System.loadLibrary("java");
@@ -50,7 +50,7 @@ public class Linker {
         try {
             Method m = ClassLoader.class.getDeclaredMethod("findNative", ClassLoader.class, String.class);
             m.setAccessible(true);
-            return (long) m.invoke(null, Linker.class.getClassLoader(), symbol);
+            return (long) m.invoke(null, MembraneLinker.class.getClassLoader(), symbol);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Failed to locate symbol %s".formatted(symbol), e);
         }

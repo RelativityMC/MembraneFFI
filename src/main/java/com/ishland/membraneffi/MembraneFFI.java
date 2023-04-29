@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class JvmciFFI {
+public class MembraneFFI {
     
     private static boolean initialized = false;
 
     public static void initialize(Instrumentation inst) {
         if (initialized) return;
-        synchronized (JvmciFFI.class) {
+        synchronized (MembraneFFI.class) {
             if (initialized) return;
             initialize0(inst);
             initialized = true;
@@ -31,7 +31,7 @@ public class JvmciFFI {
         }
 
         Set<Module> unnamed = Set.of(
-                JvmciFFI.class.getModule()
+                MembraneFFI.class.getModule()
         );
 
         Map<String, Set<Module>> extraOpens = Map.of(
@@ -49,7 +49,7 @@ public class JvmciFFI {
         }
 
         Set<Module> unnamed = Set.of(
-                JvmciFFI.class.getModule()
+                MembraneFFI.class.getModule()
         );
 
         Map<String, Set<Module>> extraExports = Map.of(

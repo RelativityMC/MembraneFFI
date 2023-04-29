@@ -1,6 +1,6 @@
 package com.ishland.membraneffi.test;
 
-import com.ishland.membraneffi.Linker;
+import com.ishland.membraneffi.MembraneLinker;
 import com.ishland.membraneffi.api.annotations.LinkTo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -165,7 +165,7 @@ public class ManyArgumentTest {
 
     static {
         TestUtil.init();
-        Linker.linkClass(ManyArgumentTest.class);
+        MembraneLinker.linkClass(ManyArgumentTest.class);
     }
 
 }
