@@ -1,4 +1,4 @@
-package com.ishland.jvmciffi.impl;
+package com.ishland.membraneffi.impl;
 
 import com.github.icedland.iced.x86.asm.AsmMemoryOperand;
 import com.github.icedland.iced.x86.asm.AsmRegister64;
@@ -6,11 +6,11 @@ import com.github.icedland.iced.x86.asm.AsmRegisterXMM;
 import com.github.icedland.iced.x86.asm.AsmRegisters;
 import com.github.icedland.iced.x86.asm.CodeAssembler;
 import com.github.icedland.iced.x86.asm.CodeAssemblerResult;
-import com.ishland.jvmciffi.api.CallingConventionAdapter;
-import com.ishland.jvmciffi.util.JVMCIAccess;
-import com.ishland.jvmciffi.util.JVMCIUtils;
-import com.ishland.jvmciffi.util.JVMCIValueKindGenerator;
-import com.ishland.jvmciffi.util.MathHelper;
+import com.ishland.membraneffi.api.CallingConventionAdapter;
+import com.ishland.membraneffi.util.JVMCIAccess;
+import com.ishland.membraneffi.util.JVMCIUtils;
+import com.ishland.membraneffi.util.JVMCIValueKindGenerator;
+import com.ishland.membraneffi.util.MathHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;

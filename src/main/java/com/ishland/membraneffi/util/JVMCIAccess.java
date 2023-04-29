@@ -1,4 +1,4 @@
-package com.ishland.jvmciffi.util;
+package com.ishland.membraneffi.util;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

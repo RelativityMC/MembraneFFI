@@ -1,6 +1,4 @@
-package com.ishland.jvmciffi;
-
-import com.ishland.jvmciffi.util.JVMCIValueKindGenerator;
+package com.ishland.membraneffi;
 
 import java.lang.instrument.Instrumentation;
 import java.util.Collections;

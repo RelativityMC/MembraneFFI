@@ -1,4 +1,4 @@
-package com.ishland.jvmciffi.api;
+package com.ishland.membraneffi.api;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.annotation.Annotation;
@@ -8,12 +8,11 @@ public interface CallingConventionAdapter {
     void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address);
 
     public static CallingConventionAdapter get() {
-        if (true) return new com.ishland.jvmciffi.impl.FramedX86_64CallingConvention();
         switch (OperatingSystem.get()) {
             case LINUX, OSX -> {
                 switch (Architecture.get()) {
                     case X86_64 -> {
-                        return new com.ishland.jvmciffi.impl.LinuxX86_64CallingConvention();
+                        return new com.ishland.membraneffi.impl.LinuxX86_64CallingConvention();
                     }
                     default -> throw new UnsupportedOperationException("Unsupported architecture: " + Architecture.get());
                 }
@@ -21,7 +20,7 @@ public interface CallingConventionAdapter {
             case WINDOWS -> {
                 switch (Architecture.get()) {
                     case X86_64 -> {
-                        return new com.ishland.jvmciffi.impl.FramedX86_64CallingConvention();
+                        return new com.ishland.membraneffi.impl.FramedX86_64CallingConvention();
                     }
                     default -> throw new UnsupportedOperationException("Unsupported architecture: " + Architecture.get());
                 }

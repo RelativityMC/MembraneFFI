@@ -1,7 +1,7 @@
-package com.ishland.jvmciffi.test;
+package com.ishland.membraneffi.test;
 
-import com.ishland.jvmciffi.Linker;
-import com.ishland.jvmciffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.Linker;
+import com.ishland.membraneffi.api.annotations.LinkTo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

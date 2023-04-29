@@ -1,10 +1,10 @@
-package com.ishland.jvmciffi.impl;
+package com.ishland.membraneffi.impl;
 
 import com.github.icedland.iced.x86.asm.AsmRegisters;
 import com.github.icedland.iced.x86.asm.CodeAssembler;
 import com.github.icedland.iced.x86.asm.CodeAssemblerResult;
-import com.ishland.jvmciffi.api.CallingConventionAdapter;
-import com.ishland.jvmciffi.util.JVMCIUtils;
+import com.ishland.membraneffi.api.CallingConventionAdapter;
+import com.ishland.membraneffi.util.JVMCIUtils;
 
 import java.io.ByteArrayOutputStream;
 

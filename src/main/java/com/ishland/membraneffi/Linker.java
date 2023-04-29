@@ -1,8 +1,8 @@
-package com.ishland.jvmciffi;
+package com.ishland.membraneffi;
 
-import com.ishland.jvmciffi.api.CallingConventionAdapter;
-import com.ishland.jvmciffi.api.annotations.LinkTo;
-import com.ishland.jvmciffi.util.JVMCIUtils;
+import com.ishland.membraneffi.api.CallingConventionAdapter;
+import com.ishland.membraneffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.util.JVMCIUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;

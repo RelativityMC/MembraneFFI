@@ -1,4 +1,4 @@
-package com.ishland.jvmciffi.util;
+package com.ishland.membraneffi.util;
 
 public class MathHelper {
 

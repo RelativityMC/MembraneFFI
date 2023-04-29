@@ -1,4 +1,4 @@
-package com.ishland.jvmciffi.api;
+package com.ishland.membraneffi.api;
 
 import java.util.Locale;
 

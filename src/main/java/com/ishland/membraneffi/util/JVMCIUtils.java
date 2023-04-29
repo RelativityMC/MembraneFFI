@@ -1,6 +1,6 @@
-package com.ishland.jvmciffi.util;
+package com.ishland.membraneffi.util;
 
-import com.ishland.jvmciffi.api.CallingConventionAdapter;
+import com.ishland.membraneffi.api.CallingConventionAdapter;
 
 import java.lang.reflect.Method;
 

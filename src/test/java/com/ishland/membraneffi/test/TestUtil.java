@@ -1,6 +1,6 @@
-package com.ishland.jvmciffi.test;
+package com.ishland.membraneffi.test;
 
-import com.ishland.jvmciffi.JvmciFFI;
+import com.ishland.membraneffi.JvmciFFI;
 import net.bytebuddy.agent.ByteBuddyAgent;
 
 public class TestUtil {
