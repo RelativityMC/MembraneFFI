@@ -15,7 +15,7 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
     //   Native: rdi, rsi, rdx, rcx,  r8,  r9, stack
 
     @Override
-    public void emitCallPrelude(ByteArrayOutputStream out, Argument[] arguments) {
+    public void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address) {
         CodeAssembler as = new CodeAssembler(64);
 
         if (arguments.length >= 6) {
@@ -69,22 +69,10 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
             }
         }
 
-        final Object result = as.assemble(out::write, 0);
-        if (result instanceof String error) {
-            throw new RuntimeException(error);
-        } else if (result instanceof CodeAssemblerResult assemblerResult) {
-            return;
-        }
-
-        throw new AssertionError(String.format("Unexpected result type: %s", result.getClass().getName()));
-    }
-
-    @Override
-    public void emitCall(ByteArrayOutputStream buf, long address) {
-        CodeAssembler as = new CodeAssembler(64);
         as.mov(AsmRegisters.rax, address);
         as.jmp(AsmRegisters.rax);
-        final Object result = as.assemble(buf::write, 0);
+
+        final Object result = as.assemble(out::write, 0);
         if (result instanceof String error) {
             throw new RuntimeException(error);
         } else if (result instanceof CodeAssemblerResult assemblerResult) {

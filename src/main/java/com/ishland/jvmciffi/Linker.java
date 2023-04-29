@@ -40,8 +40,7 @@ public class Linker {
         for (int i = 0; i < parameters.length; i++) {
             arguments[i] = new CallingConventionAdapter.Argument(i, parameters[i].getType(), parameters[i].getAnnotations());
         }
-        adapter.emitCallPrelude(out, arguments);
-        adapter.emitCall(out, address);
+        adapter.emit(out, arguments, method.getReturnType(), address);
 
         final byte[] code = out.toByteArray();
         JVMCIUtils.installCode(method, code, code.length);

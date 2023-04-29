@@ -5,9 +5,7 @@ import java.lang.annotation.Annotation;
 
 public interface CallingConventionAdapter {
 
-    void emitCallPrelude(ByteArrayOutputStream out, Argument[] arguments);
-
-    void emitCall(ByteArrayOutputStream buf, long address);
+    void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address);
 
     public static CallingConventionAdapter get() {
         switch (OperatingSystem.get()) {
@@ -15,6 +13,14 @@ public interface CallingConventionAdapter {
                 switch (Architecture.get()) {
                     case X86_64 -> {
                         return new com.ishland.jvmciffi.impl.LinuxX86_64CallingConvention();
+                    }
+                    default -> throw new UnsupportedOperationException("Unsupported architecture: " + Architecture.get());
+                }
+            }
+            case WINDOWS -> {
+                switch (Architecture.get()) {
+                    case X86_64 -> {
+                        return new com.ishland.jvmciffi.impl.FramedX86_64CallingConvention();
                     }
                     default -> throw new UnsupportedOperationException("Unsupported architecture: " + Architecture.get());
                 }
