@@ -7,35 +7,57 @@ import java.lang.reflect.Executable;
 
 public class JVMCIAccess {
 
-    private static final Class<?> clazz_JVMCI;
-    private static final Class<?> clazz_JVMCIRuntime;
-    private static final Class<?> clazz_JVMCIBackend;
-    private static final Class<?> clazz_MetaAccessProvider;
-    private static final Class<?> clazz_JavaKind;
-    private static final Class<?> clazz_ResolvedJavaMethod;
-    private static final Class<?> clazz_HotspotResolvedJavaMethod;
-    private static final Class<?> clazz_HotSpotCompiledNmethod;
-    private static final Class<?> clazz_Site;
-    private static final Class<?> clazz_Assumptions$Assumption;
-    private static final Class<?> clazz_HotSpotCompiledCode$Comment;
-    private static final Class<?> clazz_DataPatch;
-    private static final Class<?> clazz_StackSlot;
-    private static final Class<?> clazz_JVMCICompiler;
-    private static final Class<?> clazz_CodeCacheProvider;
-    private static final Class<?> clazz_InstalledCode;
-    private static final Class<?> clazz_CompiledCode;
+    public static final Class<?> clazz_JVMCI;
+    public static final Class<?> clazz_JVMCIRuntime;
+    public static final Class<?> clazz_JVMCIBackend;
+    public static final Class<?> clazz_MetaAccessProvider;
+    public static final Class<?> clazz_JavaKind;
+    public static final Class<?> clazz_ResolvedJavaMethod;
+    public static final Class<?> clazz_HotspotResolvedJavaMethod;
+    public static final Class<?> clazz_HotSpotCompiledNmethod;
+    public static final Class<?> clazz_Site;
+    public static final Class<?> clazz_Assumptions$Assumption;
+    public static final Class<?> clazz_HotSpotCompiledCode$Comment;
+    public static final Class<?> clazz_DataPatch;
+    public static final Class<?> clazz_StackSlot;
+    public static final Class<?> clazz_JVMCICompiler;
+    public static final Class<?> clazz_CodeCacheProvider;
+    public static final Class<?> clazz_InstalledCode;
+    public static final Class<?> clazz_CompiledCode;
+    public static final Class<?> clazz_RegisterConfig;
+    public static final Class<?> clazz_CallingConvention;
+    public static final Class<?> clazz_CallingConvention$Type;
+    public static final Class<?> clazz_JavaType;
+    public static final Class<?> clazz_ValueKindFactory;
+    public static final Class<?> clazz_PlatformKind;
+    public static final Class<?> clazz_TargetDescription;
+    public static final Class<?> clazz_Architecture;
+    public static final Class<?> clazz_HotSpotCallingConventionType;
+    public static final Class<?> clazz_ResolvedJavaType;
+    public static final Class<?> clazz_AllocatableValue;
+    public static final Class<?> clazz_RegisterValue;
+    public static final Class<?> clazz_Register;
 
     private static final MethodHandle method_JVMCI_getRuntime;
     private static final MethodHandle method_JVMCIRuntime_getHostJVMCIBackend;
     private static final MethodHandle method_JVMCIBackend_getMetaAccessProvider;
+    private static final MethodHandle method_JVMCIBackend_getTarget;
     private static final MethodHandle method_JavaKind_fromJavaClass;
     private static final MethodHandle method_MetaAccessProvider_getArrayBaseOffset;
     private static final MethodHandle method_MetaAccessProvider_lookupJavaMethod;
+    private static final MethodHandle method_MetaAccessProvider_lookupJavaType;
     private static final MethodHandle method_ResolvedJavaMethod_array_set;
     private static final MethodHandle method_HotspotResolvedJavaMethod_allocateCompileId;
     private static final MethodHandle method_HotspotResolvedJavaMethod_setNotInlinableOrCompilable;
     private static final MethodHandle method_JVMCIBackend_getCodeCache;
     private static final MethodHandle method_CodeCacheProvider_setDefaultCode;
+    private static final MethodHandle method_CodeCacheProvider_getRegisterConfig;
+    private static final MethodHandle method_RegisterConfig_getCallingConvention;
+    private static final MethodHandle method_Architecture_getPlatformKind;
+    private static final MethodHandle method_CallingConvention_getArgument;
+    private static final MethodHandle method_CallingConvention_getStackSize;
+    private static final MethodHandle method_RegisterValue_getRegister;
+    private static final MethodHandle method_StackSlot_getOffset;
 
     private static final MethodHandle constructor_HotSpotCompiledNmethod;
     private static final MethodHandle constructor_Site_array;
@@ -43,8 +65,10 @@ public class JVMCIAccess {
     private static final MethodHandle constructor_ResolvedJavaMethod_array;
     private static final MethodHandle constructor_HotSpotCompiledCode$Comment_array;
     private static final MethodHandle constructor_DataPatch_array;
+    private static final MethodHandle constructor_JavaType_array;
 
-    private static final MethodHandle method_JVMCICompiler_INVOCATION_ENTRY_BCI_get;
+    private static final MethodHandle getter_JVMCICompiler_INVOCATION_ENTRY_BCI_get;
+    private static final MethodHandle getter_TargetDescription_arch_get;
 
     static {
         try {
@@ -65,18 +89,40 @@ public class JVMCIAccess {
             clazz_CodeCacheProvider = Class.forName("jdk.vm.ci.code.CodeCacheProvider");
             clazz_InstalledCode = Class.forName("jdk.vm.ci.code.InstalledCode");
             clazz_CompiledCode = Class.forName("jdk.vm.ci.code.CompiledCode");
+            clazz_RegisterConfig = Class.forName("jdk.vm.ci.code.RegisterConfig");
+            clazz_CallingConvention = Class.forName("jdk.vm.ci.code.CallingConvention");
+            clazz_CallingConvention$Type = Class.forName("jdk.vm.ci.code.CallingConvention$Type");
+            clazz_JavaType = Class.forName("jdk.vm.ci.meta.JavaType");
+            clazz_ValueKindFactory = Class.forName("jdk.vm.ci.code.ValueKindFactory");
+            clazz_PlatformKind = Class.forName("jdk.vm.ci.meta.PlatformKind");
+            clazz_TargetDescription = Class.forName("jdk.vm.ci.code.TargetDescription");
+            clazz_Architecture = Class.forName("jdk.vm.ci.code.Architecture");
+            clazz_HotSpotCallingConventionType = Class.forName("jdk.vm.ci.hotspot.HotSpotCallingConventionType");
+            clazz_ResolvedJavaType = Class.forName("jdk.vm.ci.meta.ResolvedJavaType");
+            clazz_AllocatableValue = Class.forName("jdk.vm.ci.meta.AllocatableValue");
+            clazz_RegisterValue = Class.forName("jdk.vm.ci.code.RegisterValue");
+            clazz_Register = Class.forName("jdk.vm.ci.code.Register");
 
             method_JVMCI_getRuntime = MethodHandles.lookup().findStatic(clazz_JVMCI, "getRuntime", MethodType.methodType(clazz_JVMCIRuntime));
             method_JVMCIRuntime_getHostJVMCIBackend = MethodHandles.lookup().findVirtual(clazz_JVMCIRuntime, "getHostJVMCIBackend", MethodType.methodType(clazz_JVMCIBackend));
             method_JVMCIBackend_getMetaAccessProvider = MethodHandles.lookup().findVirtual(clazz_JVMCIBackend, "getMetaAccess", MethodType.methodType(clazz_MetaAccessProvider));
+            method_JVMCIBackend_getTarget = MethodHandles.lookup().findVirtual(clazz_JVMCIBackend, "getTarget", MethodType.methodType(clazz_TargetDescription));
             method_JavaKind_fromJavaClass = MethodHandles.lookup().findStatic(clazz_JavaKind, "fromJavaClass", MethodType.methodType(clazz_JavaKind, Class.class));
             method_MetaAccessProvider_getArrayBaseOffset = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "getArrayBaseOffset", MethodType.methodType(int.class, clazz_JavaKind));
             method_MetaAccessProvider_lookupJavaMethod = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "lookupJavaMethod", MethodType.methodType(clazz_ResolvedJavaMethod, Executable.class));
+            method_MetaAccessProvider_lookupJavaType = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "lookupJavaType", MethodType.methodType(clazz_ResolvedJavaType, Class.class));
             method_ResolvedJavaMethod_array_set = MethodHandles.arrayElementSetter(clazz_ResolvedJavaMethod.arrayType());
             method_HotspotResolvedJavaMethod_allocateCompileId = MethodHandles.lookup().findVirtual(clazz_HotspotResolvedJavaMethod, "allocateCompileId", MethodType.methodType(int.class, int.class));
             method_HotspotResolvedJavaMethod_setNotInlinableOrCompilable = MethodHandles.lookup().findVirtual(clazz_HotspotResolvedJavaMethod, "setNotInlinableOrCompilable", MethodType.methodType(void.class));
             method_JVMCIBackend_getCodeCache = MethodHandles.lookup().findVirtual(clazz_JVMCIBackend, "getCodeCache", MethodType.methodType(clazz_CodeCacheProvider));
             method_CodeCacheProvider_setDefaultCode = MethodHandles.lookup().findVirtual(clazz_CodeCacheProvider, "setDefaultCode", MethodType.methodType(clazz_InstalledCode, clazz_ResolvedJavaMethod, clazz_CompiledCode));
+            method_CodeCacheProvider_getRegisterConfig = MethodHandles.lookup().findVirtual(clazz_CodeCacheProvider, "getRegisterConfig", MethodType.methodType(clazz_RegisterConfig));
+            method_RegisterConfig_getCallingConvention = MethodHandles.lookup().findVirtual(clazz_RegisterConfig, "getCallingConvention", MethodType.methodType(clazz_CallingConvention, clazz_CallingConvention$Type, clazz_JavaType, clazz_JavaType.arrayType(), clazz_ValueKindFactory));
+            method_Architecture_getPlatformKind = MethodHandles.lookup().findVirtual(clazz_Architecture, "getPlatformKind", MethodType.methodType(clazz_PlatformKind, clazz_JavaKind));
+            method_CallingConvention_getArgument = MethodHandles.lookup().findVirtual(clazz_CallingConvention, "getArgument", MethodType.methodType(clazz_AllocatableValue, int.class));
+            method_CallingConvention_getStackSize = MethodHandles.lookup().findVirtual(clazz_CallingConvention, "getStackSize", MethodType.methodType(int.class));
+            method_RegisterValue_getRegister = MethodHandles.lookup().findVirtual(clazz_RegisterValue, "getRegister", MethodType.methodType(clazz_Register));
+            method_StackSlot_getOffset = MethodHandles.lookup().findVirtual(clazz_StackSlot, "getOffset", MethodType.methodType(int.class, int.class));
 
             constructor_HotSpotCompiledNmethod = MethodHandles.lookup().findConstructor(clazz_HotSpotCompiledNmethod, MethodType.methodType(void.class, String.class, byte[].class, int.class, clazz_Site.arrayType(), clazz_Assumptions$Assumption.arrayType(), clazz_ResolvedJavaMethod.arrayType(), clazz_HotSpotCompiledCode$Comment.arrayType(), byte[].class, int.class, clazz_DataPatch.arrayType(), boolean.class, int.class, clazz_StackSlot, clazz_HotspotResolvedJavaMethod, int.class, int.class, long.class, boolean.class));
             constructor_Site_array = MethodHandles.arrayConstructor(clazz_Site.arrayType());
@@ -84,8 +130,10 @@ public class JVMCIAccess {
             constructor_ResolvedJavaMethod_array = MethodHandles.arrayConstructor(clazz_ResolvedJavaMethod.arrayType());
             constructor_HotSpotCompiledCode$Comment_array = MethodHandles.arrayConstructor(clazz_HotSpotCompiledCode$Comment.arrayType());
             constructor_DataPatch_array = MethodHandles.arrayConstructor(clazz_DataPatch.arrayType());
+            constructor_JavaType_array = MethodHandles.arrayConstructor(clazz_JavaType.arrayType());
 
-            method_JVMCICompiler_INVOCATION_ENTRY_BCI_get = MethodHandles.lookup().findStaticGetter(clazz_JVMCICompiler, "INVOCATION_ENTRY_BCI", int.class);
+            getter_JVMCICompiler_INVOCATION_ENTRY_BCI_get = MethodHandles.lookup().findStaticGetter(clazz_JVMCICompiler, "INVOCATION_ENTRY_BCI", int.class);
+            getter_TargetDescription_arch_get = MethodHandles.lookup().findGetter(clazz_TargetDescription, "arch", clazz_Architecture);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -115,6 +163,14 @@ public class JVMCIAccess {
         }
     }
 
+    public static Object jvmciBackend$getTarget() {
+        try {
+            return method_JVMCIBackend_getTarget.invoke(jvmciRuntime$getHostJVMCIBackend());
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Object javaKind$fromJavaClass(Class<?> clazz) {
         try {
             return method_JavaKind_fromJavaClass.invoke(clazz);
@@ -134,6 +190,14 @@ public class JVMCIAccess {
     public static Object metaAccessProvider$lookupJavaMethod(Executable executable) {
         try {
             return method_MetaAccessProvider_lookupJavaMethod.invoke(jvmciBackend$getMetaAccessProvider(), executable);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object metaAccessProvider$lookupJavaType(Class<?> clazz) {
+        try {
+            return method_MetaAccessProvider_lookupJavaType.invoke(jvmciBackend$getMetaAccessProvider(), clazz);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -174,6 +238,62 @@ public class JVMCIAccess {
     public static Object codeCacheProvider$setDefaultCode(Object method, Object code) {
         try {
             return method_CodeCacheProvider_setDefaultCode.invoke(jvmciBackend$getCodeCache(), method, code);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object codeCacheProvider$getRegisterConfig() {
+        try {
+            return method_CodeCacheProvider_getRegisterConfig.invoke(jvmciBackend$getCodeCache());
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object registerConfig$getCallingConvention(Object registerConfig, Object type, Object returnType, Object parameterTypes, Object valueKindFactory) {
+        try {
+            return method_RegisterConfig_getCallingConvention.invoke(registerConfig, type, returnType, parameterTypes, valueKindFactory);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object architecture$getPlatformKind(Object architecture, Object javaKind) {
+        try {
+            return method_Architecture_getPlatformKind.invoke(architecture, javaKind);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object callingConvention$getArgument(Object callingConvention, int index) {
+        try {
+            return method_CallingConvention_getArgument.invoke(callingConvention, index);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int callingConvention$getStackSize(Object callingConvention) {
+        try {
+            return (int) method_CallingConvention_getStackSize.invoke(callingConvention);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object registerValue$getRegister(Object registerValue) {
+        try {
+            return method_RegisterValue_getRegister.invoke(registerValue);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int stackSlot$getOffset(Object stackSlot, int totalFrameSize) {
+        try {
+            return (int) method_StackSlot_getOffset.invoke(stackSlot, totalFrameSize);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -227,9 +347,25 @@ public class JVMCIAccess {
         }
     }
 
+    public static <T> T[] javaTypeArray$constructor(int length) {
+        try {
+            return (T[]) constructor_JavaType_array.invoke(length);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static int jvmciCompiler$INVOCATION_ENTRY_BCI$get() {
         try {
-            return (int) method_JVMCICompiler_INVOCATION_ENTRY_BCI_get.invoke();
+            return (int) getter_JVMCICompiler_INVOCATION_ENTRY_BCI_get.invoke();
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object targetDescription$arch$get(Object target) {
+        try {
+            return getter_TargetDescription_arch_get.invoke(target);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

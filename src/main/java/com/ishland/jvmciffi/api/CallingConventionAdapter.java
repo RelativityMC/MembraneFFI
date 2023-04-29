@@ -8,6 +8,7 @@ public interface CallingConventionAdapter {
     void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address);
 
     public static CallingConventionAdapter get() {
+        if (true) return new com.ishland.jvmciffi.impl.FramedX86_64CallingConvention();
         switch (OperatingSystem.get()) {
             case LINUX, OSX -> {
                 switch (Architecture.get()) {

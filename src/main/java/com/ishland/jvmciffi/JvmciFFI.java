@@ -1,5 +1,7 @@
 package com.ishland.jvmciffi;
 
+import com.ishland.jvmciffi.util.JVMCIValueKindGenerator;
+
 import java.lang.instrument.Instrumentation;
 import java.util.Collections;
 import java.util.Map;
