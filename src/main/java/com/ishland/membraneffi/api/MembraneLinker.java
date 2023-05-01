@@ -1,6 +1,5 @@
-package com.ishland.membraneffi;
+package com.ishland.membraneffi.api;
 
-import com.ishland.membraneffi.api.CallingConventionAdapter;
 import com.ishland.membraneffi.api.annotations.LinkTo;
 import com.ishland.membraneffi.util.JVMCIUtils;
 
@@ -23,7 +22,7 @@ public class MembraneLinker {
 
     }
 
-    private static void linkMethod(Method method) {
+    public static void linkMethod(Method method) {
         LinkTo linkTo = method.getAnnotation(LinkTo.class);
         if (linkTo == null) {
             throw new IllegalArgumentException("Method " + method + " is not annotated with @LinkTo");
