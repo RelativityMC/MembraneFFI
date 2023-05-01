@@ -2,7 +2,7 @@ package com.ishland.membraneffi.test;
 
 import com.ishland.membraneffi.api.Architecture;
 import com.ishland.membraneffi.api.MembraneLinker;
-import com.ishland.membraneffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.api.annotations.Link;
 import com.ishland.membraneffi.api.annotations.VarargCall;
 import com.ishland.membraneffi.impl.FramedX86_64CallingConvention;
 import com.ishland.membraneffi.impl.LinuxX86_64CallingConvention;
@@ -47,7 +47,7 @@ public class ManyArgumentTest {
     }
 
     @VarargCall
-    @LinkTo("snprintf")
+    @Link({"snprintf", "_snprintf"})
     private static native void snprintf_test(byte[] res, int size, byte[] format,
                                              int arg1, double arg2, byte[] arg3,
                                              int arg4, double arg5, byte[] arg6,

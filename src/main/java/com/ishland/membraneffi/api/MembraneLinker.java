@@ -1,12 +1,13 @@
 package com.ishland.membraneffi.api;
 
-import com.ishland.membraneffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.api.annotations.Link;
 import com.ishland.membraneffi.api.annotations.VarargCall;
 import com.ishland.membraneffi.util.JVMCIUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 public class MembraneLinker {
 
@@ -16,7 +17,7 @@ public class MembraneLinker {
 
     public static void linkClass(Class<?> clazz) {
         for (Method method : clazz.getDeclaredMethods()) {
-            if (method.getAnnotation(LinkTo.class) != null) {
+            if (method.getAnnotation(Link.class) != null) {
                 linkMethod(method);
             }
         }
@@ -24,15 +25,18 @@ public class MembraneLinker {
     }
 
     public static void linkMethod(Method method) {
-        LinkTo linkTo = method.getAnnotation(LinkTo.class);
-        if (linkTo == null) {
-            throw new IllegalArgumentException("Method " + method + " is not annotated with @LinkTo");
+        Link link = method.getAnnotation(Link.class);
+        if (link == null) {
+            throw new IllegalArgumentException("Method " + method + " is not annotated with @Link");
         }
         boolean isVarargCall = method.getAnnotation(VarargCall.class) != null;
-        String symbol = linkTo.value();
-        long address = findAddress(symbol);
+        long address = 0;
+        for (String symbol : link.value()) {
+            address = findAddress(symbol);
+            if (address != 0) break;
+        }
         if (address == 0) {
-            throw new IllegalStateException("Symbol " + symbol + " not found");
+            throw new IllegalStateException(String.format("Cannot find symbol for method %s, tried %s", method, Arrays.toString(link.value())));
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         final CallingConventionAdapter adapter = CallingConventionAdapter.get();

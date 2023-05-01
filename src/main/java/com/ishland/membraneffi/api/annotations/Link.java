@@ -10,8 +10,12 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LinkTo {
+public @interface Link {
 
-    String value();
+    /**
+     * Alternative name of the native function.
+     * If not specified, Java method name is assumed.
+     */
+    String[] value() default {};
 
 }
