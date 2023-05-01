@@ -36,13 +36,26 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
                     if (generalPurposeArgIndex < 6) { // adapt calling convention
 //                        emit(buf, (type == long.class ? MOVE_LONG_ARG_REG : MOVE_INT_ARG_REG)[generalPurposeArgIndex++]);
                         switch (generalPurposeArgIndex++) {
-                            case 0 -> as.mov(AsmRegisters.rdi, AsmRegisters.rsi);
-                            case 1 -> as.mov(AsmRegisters.rsi, AsmRegisters.rdx);
-                            case 2 -> as.mov(AsmRegisters.rdx, AsmRegisters.rcx);
-                            case 3 -> as.mov(AsmRegisters.rcx, AsmRegisters.r8);
-                            case 4 -> as.mov(AsmRegisters.r8, AsmRegisters.r9);
-                            case 5 -> as.mov(AsmRegisters.r9, AsmRegisters.rax);
-                            default -> throw new AssertionError();
+                            case 0:
+                                as.mov(AsmRegisters.rdi, AsmRegisters.rsi);
+                                break;
+                            case 1:
+                                as.mov(AsmRegisters.rsi, AsmRegisters.rdx);
+                                break;
+                            case 2:
+                                as.mov(AsmRegisters.rdx, AsmRegisters.rcx);
+                                break;
+                            case 3:
+                                as.mov(AsmRegisters.rcx, AsmRegisters.r8);
+                                break;
+                            case 4:
+                                as.mov(AsmRegisters.r8, AsmRegisters.r9);
+                                break;
+                            case 5:
+                                as.mov(AsmRegisters.r9, AsmRegisters.rax);
+                                break;
+                            default:
+                                throw new AssertionError();
                         }
                     } else { // the rest is passed on stack
                         stackArgIndex++;
@@ -52,13 +65,26 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
                 final int baseOffset = JVMCIUtils.baseOffset(arg);
                 if (generalPurposeArgIndex < 6) { // adapt calling convention + offset
                     switch (generalPurposeArgIndex++) {
-                        case 0 -> as.lea(AsmRegisters.rdi, AsmRegisters.rsi.add(baseOffset));
-                        case 1 -> as.lea(AsmRegisters.rsi, AsmRegisters.rdx.add(baseOffset));
-                        case 2 -> as.lea(AsmRegisters.rdx, AsmRegisters.rcx.add(baseOffset));
-                        case 3 -> as.lea(AsmRegisters.rcx, AsmRegisters.r8.add(baseOffset));
-                        case 4 -> as.lea(AsmRegisters.r8, AsmRegisters.r9.add(baseOffset));
-                        case 5 -> as.lea(AsmRegisters.r9, AsmRegisters.rax.add(baseOffset));
-                        default -> throw new AssertionError();
+                        case 0:
+                            as.lea(AsmRegisters.rdi, AsmRegisters.rsi.add(baseOffset));
+                            break;
+                        case 1:
+                            as.lea(AsmRegisters.rsi, AsmRegisters.rdx.add(baseOffset));
+                            break;
+                        case 2:
+                            as.lea(AsmRegisters.rdx, AsmRegisters.rcx.add(baseOffset));
+                            break;
+                        case 3:
+                            as.lea(AsmRegisters.rcx, AsmRegisters.r8.add(baseOffset));
+                            break;
+                        case 4:
+                            as.lea(AsmRegisters.r8, AsmRegisters.r9.add(baseOffset));
+                            break;
+                        case 5:
+                            as.lea(AsmRegisters.r9, AsmRegisters.rax.add(baseOffset));
+                            break;
+                        default:
+                            throw new AssertionError();
                     }
                 } else { // the rest is passed on stack
                     int adjustedStackOffset = (stackArgIndex + 1) * 8;
@@ -73,9 +99,11 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
         as.jmp(AsmRegisters.rax);
 
         final Object result = as.assemble(out::write, 0);
-        if (result instanceof String error) {
+        if (result instanceof String) {
+            String error = (String) result;
             throw new RuntimeException(error);
-        } else if (result instanceof CodeAssemblerResult assemblerResult) {
+        } else if (result instanceof CodeAssemblerResult) {
+            CodeAssemblerResult assemblerResult = (CodeAssemblerResult) result;
             return;
         }
 

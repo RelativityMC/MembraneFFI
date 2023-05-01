@@ -24,13 +24,13 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
 
         final Object registerConfig = JVMCIAccess.codeCacheProvider$getRegisterConfig();
         final Object metaAccess = JVMCIAccess.jvmciBackend$getMetaAccessProvider();
-        final Object javaCallingConvention = JVMCIAccess.registerConfig$getCallingConvention(registerConfig,
+        @SuppressWarnings("unchecked") final Object javaCallingConvention = JVMCIAccess.registerConfig$getCallingConvention(registerConfig,
                 Enum.valueOf((Class<? extends Enum>) JVMCIAccess.clazz_HotSpotCallingConventionType, "JavaCall"),
                 JVMCIAccess.metaAccessProvider$lookupJavaType(returnType),
                 Arrays.stream(arguments).map(argument -> JVMCIAccess.metaAccessProvider$lookupJavaType(argument.type())).toArray(JVMCIAccess::javaTypeArray$constructor),
                 JVMCIValueKindGenerator.generatedFactory
         );
-        final Object nativeCallingConvention = JVMCIAccess.registerConfig$getCallingConvention(registerConfig,
+        @SuppressWarnings("unchecked") final Object nativeCallingConvention = JVMCIAccess.registerConfig$getCallingConvention(registerConfig,
                 Enum.valueOf((Class<? extends Enum>) JVMCIAccess.clazz_HotSpotCallingConventionType, "NativeCall"),
                 JVMCIAccess.metaAccessProvider$lookupJavaType(returnType),
                 Arrays.stream(arguments).map(argument -> JVMCIAccess.metaAccessProvider$lookupJavaType(argument.type())).toArray(JVMCIAccess::javaTypeArray$constructor),
@@ -57,11 +57,13 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
         as.sub(AsmRegisters.rsp, spilledRegisters.size() * 8);
         currentFrameSize += spilledRegisters.size() * 8;
 
-        for (var entry : spilledRegisters.entrySet()) {
+        for (java.util.Map.Entry<String, Integer> entry : spilledRegisters.entrySet()) {
             final Object icedRegister = toIcedRegister(entry.getKey());
-            if (icedRegister instanceof AsmRegister64 reg64) {
+            if (icedRegister instanceof AsmRegister64) {
+                AsmRegister64 reg64 = (AsmRegister64) icedRegister;
                 as.mov(AsmRegisters.qword_ptr(AsmRegisters.rbp, entry.getValue()), reg64);
-            } else if (icedRegister instanceof AsmRegisterXMM regxmm) {
+            } else if (icedRegister instanceof AsmRegisterXMM) {
+                AsmRegisterXMM regxmm = (AsmRegisterXMM) icedRegister;
                 as.movq(AsmRegisters.qword_ptr(AsmRegisters.rbp, entry.getValue()), regxmm);
             }
         }
@@ -95,12 +97,14 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
             if (JVMCIAccess.clazz_RegisterValue.isInstance(nativeArgument)) {
                 Object register = nativeArgument;
                 final Object icedRegister = toIcedRegister(JVMCIAccess.registerValue$getRegister(register).toString());
-                if (icedRegister instanceof AsmRegister64 reg64) {
+                if (icedRegister instanceof AsmRegister64) {
+                    AsmRegister64 reg64 = (AsmRegister64) icedRegister;
                     as.mov(reg64, source);
                     if (!argument.type().isPrimitive()) {
                         as.add(reg64, JVMCIUtils.arrayBaseOffset(argument.type()));
                     }
-                } else if (icedRegister instanceof AsmRegisterXMM regxmm) {
+                } else if (icedRegister instanceof AsmRegisterXMM) {
+                    AsmRegisterXMM regxmm = (AsmRegisterXMM) icedRegister;
                     as.movq(regxmm, source);
                     if (!argument.type().isPrimitive()) {
                         throw new AssertionError();
@@ -129,9 +133,11 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
         as.ret();
 
         final Object result = as.assemble(out::write, 0);
-        if (result instanceof String error) {
+        if (result instanceof String) {
+            String error = (String) result;
             throw new RuntimeException(error);
-        } else if (result instanceof CodeAssemblerResult assemblerResult) {
+        } else if (result instanceof CodeAssemblerResult) {
+            CodeAssemblerResult assemblerResult = (CodeAssemblerResult) result;
             return;
         }
 

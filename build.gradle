@@ -6,7 +6,7 @@ plugins {
 group = 'com.ishland'
 version = '1.0-SNAPSHOT'
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_9
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ test {
         showStandardStreams = true
         exceptionFormat = 'full'
     }
-    jvmArgs "-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UnlockDiagnosticVMOptions", "-XX:PrintAssemblyOptions=intel", "-XX:CompileCommand=print,com.ishland.jvmciffi.test.*::*"
+    jvmArgs "-XX:+UnlockExperimentalVMOptions", "-XX:+EnableJVMCI", "-XX:+UnlockDiagnosticVMOptions", "-XX:PrintAssemblyOptions=intel", "-XX:CompileCommand=print,com.ishland.membraneffi.test.*::*"
 }
 
 tasks.withType(JavaCompile) {
