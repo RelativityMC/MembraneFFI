@@ -7,6 +7,7 @@ import com.github.icedland.iced.x86.asm.AsmRegisters;
 import com.github.icedland.iced.x86.asm.CodeAssembler;
 import com.github.icedland.iced.x86.asm.CodeAssemblerResult;
 import com.ishland.membraneffi.api.CallingConventionAdapter;
+import com.ishland.membraneffi.api.OperatingSystem;
 import com.ishland.membraneffi.util.JVMCIAccess;
 import com.ishland.membraneffi.util.JVMCIUtils;
 import com.ishland.membraneffi.util.JVMCIValueKindGenerator;
@@ -15,11 +16,23 @@ import com.ishland.membraneffi.util.MathHelper;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class FramedX86_64CallingConvention implements CallingConventionAdapter {
 
+    private boolean isWindows = OperatingSystem.get() == OperatingSystem.WINDOWS;
+
+    // rcx, rdx,  r8,  r9, stack
+    private Map<AsmRegisterXMM, AsmRegister64> windowsExtraMappings = Map.of(
+            AsmRegisters.xmm0, AsmRegisters.rcx,
+            AsmRegisters.xmm1, AsmRegisters.rdx,
+            AsmRegisters.xmm2, AsmRegisters.r8,
+            AsmRegisters.xmm3, AsmRegisters.r9
+    );
+
     @Override
-    public void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address) {
+    public void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address, boolean isVarargCall) {
         CodeAssembler as = new CodeAssembler(64);
 
         final Object registerConfig = JVMCIAccess.codeCacheProvider$getRegisterConfig();
@@ -57,6 +70,8 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
         as.sub(AsmRegisters.rsp, spilledRegisters.size() * 8);
         currentFrameSize += spilledRegisters.size() * 8;
 
+        int xmmCount = 0;
+
         for (java.util.Map.Entry<String, Integer> entry : spilledRegisters.entrySet()) {
             final Object icedRegister = toIcedRegister(entry.getKey());
             if (icedRegister instanceof AsmRegister64) {
@@ -64,7 +79,8 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
                 as.mov(AsmRegisters.qword_ptr(AsmRegisters.rbp, entry.getValue()), reg64);
             } else if (icedRegister instanceof AsmRegisterXMM) {
                 AsmRegisterXMM regxmm = (AsmRegisterXMM) icedRegister;
-                as.movq(AsmRegisters.qword_ptr(AsmRegisters.rbp, entry.getValue()), regxmm);
+                as.movsd(AsmRegisters.qword_ptr(AsmRegisters.rbp, entry.getValue()), regxmm);
+                xmmCount ++;
             }
         }
 
@@ -105,7 +121,10 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
                     }
                 } else if (icedRegister instanceof AsmRegisterXMM) {
                     AsmRegisterXMM regxmm = (AsmRegisterXMM) icedRegister;
-                    as.movq(regxmm, source);
+                    as.movsd(regxmm, source);
+                    if (isVarargCall && isWindows) {
+                        as.mov(Objects.requireNonNull(windowsExtraMappings.get(regxmm), "windows extra mappings check failed, has ABI changed?"), source);
+                    }
                     if (!argument.type().isPrimitive()) {
                         throw new AssertionError();
                     }
@@ -120,6 +139,10 @@ public class FramedX86_64CallingConvention implements CallingConventionAdapter {
             } else {
                 throw new UnsupportedOperationException("Unsupported argument type: " + nativeArgument);
             }
+        }
+
+        if (isVarargCall && !isWindows) {
+            as.mov(AsmRegisters.al, xmmCount);
         }
 
         // invoke call

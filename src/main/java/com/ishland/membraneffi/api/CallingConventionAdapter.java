@@ -1,15 +1,27 @@
 package com.ishland.membraneffi.api;
 
+import com.ishland.membraneffi.util.CallingConventionOverride;
+
 import java.io.ByteArrayOutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Objects;
 
 public interface CallingConventionAdapter {
 
-    void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address);
+    void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address, boolean isVarargCall);
 
     public static CallingConventionAdapter get() {
+        final Class<?> override = CallingConventionOverride.getCallingConventionOverride();
+        if (override != null) {
+            try {
+                return (CallingConventionAdapter) override.getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException("Failed to instantiate calling convention adapter", e);
+            }
+        }
+
         switch (OperatingSystem.get()) {
             case LINUX:
             case OSX:

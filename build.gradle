@@ -6,7 +6,7 @@ plugins {
 group = 'com.ishland'
 version = '1.0-SNAPSHOT'
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_9
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()

@@ -1,14 +1,54 @@
 package com.ishland.membraneffi.test;
 
+import com.ishland.membraneffi.api.Architecture;
 import com.ishland.membraneffi.api.MembraneLinker;
 import com.ishland.membraneffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.api.annotations.VarargCall;
+import com.ishland.membraneffi.impl.FramedX86_64CallingConvention;
+import com.ishland.membraneffi.impl.LinuxX86_64CallingConvention;
+import com.ishland.membraneffi.util.CallingConventionOverride;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 public class ManyArgumentTest {
 
+    @Test
+    @EnabledOnOs(
+            value = {OS.LINUX, OS.MAC}
+    )
+    @EnabledIf("isX86_64")
+    public void testLinuxX86_64CallingConvention() {
+        try {
+            CallingConventionOverride.setCallingConventionOverride(LinuxX86_64CallingConvention.class);
+            MembraneLinker.linkClass(ManyArgumentTest.class);
+            test_sprintf();
+        } finally {
+            CallingConventionOverride.setCallingConventionOverride(null);
+        }
+    }
+
+    @Test
+    @EnabledIf("isX86_64")
+    public void testFramedX86_64CallingConvention() {
+        try {
+            CallingConventionOverride.setCallingConventionOverride(FramedX86_64CallingConvention.class);
+            MembraneLinker.linkClass(ManyArgumentTest.class);
+            test_sprintf();
+        } finally {
+            CallingConventionOverride.setCallingConventionOverride(null);
+        }
+    }
+
+    private boolean isX86_64() {
+        return Architecture.get() == Architecture.X86_64;
+    }
+
+    @VarargCall
     @LinkTo("sprintf")
-    private static void sprintf_test(byte[] res, byte[] format,
+    private static native void sprintf_test(byte[] res, byte[] format,
                                             int arg1, double arg2, byte[] arg3,
                                             int arg4, double arg5, byte[] arg6,
                                             int arg7, double arg8, byte[] arg9,
@@ -48,10 +88,7 @@ public class ManyArgumentTest {
                                             int arg109, double arg110, byte[] arg111,
                                             int arg112, double arg113, byte[] arg114,
                                             int arg115, double arg116, byte[] arg117,
-                                            int arg118, double arg119, byte[] arg120) {
-        throw new RuntimeException("Not installed");
-    }
-
+                                            int arg118, double arg119, byte[] arg120);
     private static byte[] toCString(String s) {
         byte[] bytes = s.getBytes();
         byte[] result = new byte[bytes.length + 1];
@@ -65,12 +102,11 @@ public class ManyArgumentTest {
         return new String(bytes, 0, i);
     }
 
-    @Test
-    public void test_sprintf() {
+    private void test_sprintf() {
         final String s = "%d %f %s ".repeat(40);
-        final byte[] formatBytes = toCString(s);
+        final byte[] formatBytes = toCString("%d %lf %s ".repeat(40));
         final int arg1 = 12345678;
-        final double arg2 = 07654321.12345678;
+        final double arg2 = 987654321.12345;
         final String arg3 = "test";
         final byte[] arg3Bytes = toCString(arg3);
 
@@ -165,7 +201,6 @@ public class ManyArgumentTest {
 
     static {
         TestUtil.init();
-        MembraneLinker.linkClass(ManyArgumentTest.class);
     }
 
 }

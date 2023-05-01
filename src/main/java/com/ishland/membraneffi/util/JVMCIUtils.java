@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 public class JVMCIUtils {
 
     public static int baseOffset(CallingConventionAdapter.Argument argument) {
-        if (argument.type().isArray() && argument.type().componentType().isPrimitive()) {
+        if (argument.type().isArray() && argument.type().getComponentType().isPrimitive()) {
             return arrayBaseOffset(argument.type());
         }
 
@@ -15,7 +15,7 @@ public class JVMCIUtils {
     }
 
     public static int arrayBaseOffset(Class<?> arrayType) {
-        final Object componentType = JVMCIAccess.javaKind$fromJavaClass(arrayType.componentType());
+        final Object componentType = JVMCIAccess.javaKind$fromJavaClass(arrayType.getComponentType());
         return JVMCIAccess.metaAccessProvider$getArrayBaseOffset(componentType);
     }
 

@@ -19,12 +19,12 @@ public class TestUtil {
             try {
                 System.loadLibrary("msvcrt");
             } catch (Throwable t) {
-                System.out.println("Failed to load msvcrt.dll: %s".formatted(t.toString()));
+                System.out.println(String.format("Failed to load msvcrt.dll: %s", t.toString()));
             }
             try {
                 System.loadLibrary("ucrtbase");
             } catch (Throwable t) {
-                System.out.println("Failed to load ucrtbase.dll: %s".formatted(t.toString()));
+                System.out.println(String.format("Failed to load ucrtbase.dll: %s", t.toString()));
             }
         }
     }

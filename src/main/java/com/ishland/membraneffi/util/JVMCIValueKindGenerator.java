@@ -31,7 +31,7 @@ public class JVMCIValueKindGenerator {
             final Class<?> clazz_PlatformKind = Class.forName("jdk.vm.ci.meta.PlatformKind");
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
             final String name = "com/ishland/membraneffi/util/GeneratedValueKindImpl";
-            writer.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, name, null, Type.getInternalName(clazz_ValueKind), new String[0]);
+            writer.visit(Opcodes.V11, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, name, null, Type.getInternalName(clazz_ValueKind), new String[0]);
 
             // <clinit> that does nothing
             {

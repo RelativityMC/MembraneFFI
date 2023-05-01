@@ -26,7 +26,7 @@ public class MembraneFFI {
 
     private static void openJavaLangPackages(Instrumentation inst) {
         Optional<Module> javaLangModule = ModuleLayer.boot().findModule("java.base");
-        if (javaLangModule.isEmpty()) {
+        if (!javaLangModule.isPresent()) {
             throw new IllegalStateException("java.base module not found ?????");
         }
 
@@ -44,7 +44,7 @@ public class MembraneFFI {
 
     private static void exportJvmciPackages(Instrumentation inst) {
         Optional<Module> jvmciModule = ModuleLayer.boot().findModule("jdk.internal.vm.ci");
-        if (jvmciModule.isEmpty()) {
+        if (!jvmciModule.isPresent()) {
             throw new IllegalStateException("JVMCI module not found. Use -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI");
         }
 

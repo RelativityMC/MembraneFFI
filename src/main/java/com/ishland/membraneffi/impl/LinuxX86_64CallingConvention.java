@@ -15,7 +15,7 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
     //   Native: rdi, rsi, rdx, rcx,  r8,  r9, stack
 
     @Override
-    public void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address) {
+    public void emit(ByteArrayOutputStream out, Argument[] arguments, Class<?> returnType, long address, boolean isVarargCall) {
         CodeAssembler as = new CodeAssembler(64);
 
         if (arguments.length >= 6) {
@@ -94,6 +94,9 @@ public class LinuxX86_64CallingConvention implements CallingConventionAdapter {
                 }
             }
         }
+
+        if (isVarargCall)
+            as.mov(AsmRegisters.al, Math.min(xmmArgIndex, 8));
 
         as.mov(AsmRegisters.rax, address);
         as.jmp(AsmRegisters.rax);

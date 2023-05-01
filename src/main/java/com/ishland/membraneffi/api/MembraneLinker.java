@@ -1,6 +1,7 @@
 package com.ishland.membraneffi.api;
 
 import com.ishland.membraneffi.api.annotations.LinkTo;
+import com.ishland.membraneffi.api.annotations.VarargCall;
 import com.ishland.membraneffi.util.JVMCIUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ public class MembraneLinker {
         if (linkTo == null) {
             throw new IllegalArgumentException("Method " + method + " is not annotated with @LinkTo");
         }
+        boolean isVarargCall = method.getAnnotation(VarargCall.class) != null;
         String symbol = linkTo.value();
         long address = findAddress(symbol);
         if (address == 0) {
@@ -39,7 +41,7 @@ public class MembraneLinker {
         for (int i = 0; i < parameters.length; i++) {
             arguments[i] = new CallingConventionAdapter.Argument(i, parameters[i].getType(), parameters[i].getAnnotations());
         }
-        adapter.emit(out, arguments, method.getReturnType(), address);
+        adapter.emit(out, arguments, method.getReturnType(), address, isVarargCall);
 
         final byte[] code = out.toByteArray();
         JVMCIUtils.installCode(method, code, code.length);
@@ -51,7 +53,7 @@ public class MembraneLinker {
             m.setAccessible(true);
             return (long) m.invoke(null, MembraneLinker.class.getClassLoader(), symbol);
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to locate symbol %s".formatted(symbol), e);
+            throw new RuntimeException(String.format("Failed to locate symbol %s", symbol), e);
         }
     }
 

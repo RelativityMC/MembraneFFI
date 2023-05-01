@@ -111,26 +111,26 @@ public class JVMCIAccess {
             method_MetaAccessProvider_getArrayBaseOffset = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "getArrayBaseOffset", MethodType.methodType(int.class, clazz_JavaKind));
             method_MetaAccessProvider_lookupJavaMethod = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "lookupJavaMethod", MethodType.methodType(clazz_ResolvedJavaMethod, Executable.class));
             method_MetaAccessProvider_lookupJavaType = MethodHandles.lookup().findVirtual(clazz_MetaAccessProvider, "lookupJavaType", MethodType.methodType(clazz_ResolvedJavaType, Class.class));
-            method_ResolvedJavaMethod_array_set = MethodHandles.arrayElementSetter(clazz_ResolvedJavaMethod.arrayType());
+            method_ResolvedJavaMethod_array_set = MethodHandles.arrayElementSetter(ReflectionUtils.arrayType(clazz_ResolvedJavaMethod));
             method_HotspotResolvedJavaMethod_allocateCompileId = MethodHandles.lookup().findVirtual(clazz_HotspotResolvedJavaMethod, "allocateCompileId", MethodType.methodType(int.class, int.class));
             method_HotspotResolvedJavaMethod_setNotInlinableOrCompilable = MethodHandles.lookup().findVirtual(clazz_HotspotResolvedJavaMethod, "setNotInlinableOrCompilable", MethodType.methodType(void.class));
             method_JVMCIBackend_getCodeCache = MethodHandles.lookup().findVirtual(clazz_JVMCIBackend, "getCodeCache", MethodType.methodType(clazz_CodeCacheProvider));
             method_CodeCacheProvider_setDefaultCode = MethodHandles.lookup().findVirtual(clazz_CodeCacheProvider, "setDefaultCode", MethodType.methodType(clazz_InstalledCode, clazz_ResolvedJavaMethod, clazz_CompiledCode));
             method_CodeCacheProvider_getRegisterConfig = MethodHandles.lookup().findVirtual(clazz_CodeCacheProvider, "getRegisterConfig", MethodType.methodType(clazz_RegisterConfig));
-            method_RegisterConfig_getCallingConvention = MethodHandles.lookup().findVirtual(clazz_RegisterConfig, "getCallingConvention", MethodType.methodType(clazz_CallingConvention, clazz_CallingConvention$Type, clazz_JavaType, clazz_JavaType.arrayType(), clazz_ValueKindFactory));
+            method_RegisterConfig_getCallingConvention = MethodHandles.lookup().findVirtual(clazz_RegisterConfig, "getCallingConvention", MethodType.methodType(clazz_CallingConvention, clazz_CallingConvention$Type, clazz_JavaType, ReflectionUtils.arrayType(clazz_JavaType), clazz_ValueKindFactory));
             method_Architecture_getPlatformKind = MethodHandles.lookup().findVirtual(clazz_Architecture, "getPlatformKind", MethodType.methodType(clazz_PlatformKind, clazz_JavaKind));
             method_CallingConvention_getArgument = MethodHandles.lookup().findVirtual(clazz_CallingConvention, "getArgument", MethodType.methodType(clazz_AllocatableValue, int.class));
             method_CallingConvention_getStackSize = MethodHandles.lookup().findVirtual(clazz_CallingConvention, "getStackSize", MethodType.methodType(int.class));
             method_RegisterValue_getRegister = MethodHandles.lookup().findVirtual(clazz_RegisterValue, "getRegister", MethodType.methodType(clazz_Register));
             method_StackSlot_getOffset = MethodHandles.lookup().findVirtual(clazz_StackSlot, "getOffset", MethodType.methodType(int.class, int.class));
 
-            constructor_HotSpotCompiledNmethod = MethodHandles.lookup().findConstructor(clazz_HotSpotCompiledNmethod, MethodType.methodType(void.class, String.class, byte[].class, int.class, clazz_Site.arrayType(), clazz_Assumptions$Assumption.arrayType(), clazz_ResolvedJavaMethod.arrayType(), clazz_HotSpotCompiledCode$Comment.arrayType(), byte[].class, int.class, clazz_DataPatch.arrayType(), boolean.class, int.class, clazz_StackSlot, clazz_HotspotResolvedJavaMethod, int.class, int.class, long.class, boolean.class));
-            constructor_Site_array = MethodHandles.arrayConstructor(clazz_Site.arrayType());
-            constructor_Assumptions$Assumption_array = MethodHandles.arrayConstructor(clazz_Assumptions$Assumption.arrayType());
-            constructor_ResolvedJavaMethod_array = MethodHandles.arrayConstructor(clazz_ResolvedJavaMethod.arrayType());
-            constructor_HotSpotCompiledCode$Comment_array = MethodHandles.arrayConstructor(clazz_HotSpotCompiledCode$Comment.arrayType());
-            constructor_DataPatch_array = MethodHandles.arrayConstructor(clazz_DataPatch.arrayType());
-            constructor_JavaType_array = MethodHandles.arrayConstructor(clazz_JavaType.arrayType());
+            constructor_HotSpotCompiledNmethod = MethodHandles.lookup().findConstructor(clazz_HotSpotCompiledNmethod, MethodType.methodType(void.class, String.class, byte[].class, int.class, ReflectionUtils.arrayType(clazz_Site), ReflectionUtils.arrayType(clazz_Assumptions$Assumption), ReflectionUtils.arrayType(clazz_ResolvedJavaMethod), ReflectionUtils.arrayType(clazz_HotSpotCompiledCode$Comment), byte[].class, int.class, ReflectionUtils.arrayType(clazz_DataPatch), boolean.class, int.class, clazz_StackSlot, clazz_HotspotResolvedJavaMethod, int.class, int.class, long.class, boolean.class));
+            constructor_Site_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_Site));
+            constructor_Assumptions$Assumption_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_Assumptions$Assumption));
+            constructor_ResolvedJavaMethod_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_ResolvedJavaMethod));
+            constructor_HotSpotCompiledCode$Comment_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_HotSpotCompiledCode$Comment));
+            constructor_DataPatch_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_DataPatch));
+            constructor_JavaType_array = MethodHandles.arrayConstructor(ReflectionUtils.arrayType(clazz_JavaType));
 
             getter_JVMCICompiler_INVOCATION_ENTRY_BCI_get = MethodHandles.lookup().findStaticGetter(clazz_JVMCICompiler, "INVOCATION_ENTRY_BCI", int.class);
             getter_TargetDescription_arch_get = MethodHandles.lookup().findGetter(clazz_TargetDescription, "arch", clazz_Architecture);
