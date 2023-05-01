@@ -85,7 +85,18 @@ public class MembraneLinker {
         JVMCIUtils.installCode(method, code, code.length);
     }
 
+    public static void linkMethod0(Method method, String symbol, boolean isVarargCall) {
+        final long address = findAddress(symbol);
+        if (address == 0) {
+            throw new UnsatisfiedLinkError(String.format("Cannot find symbol %s", symbol));
+        }
+        linkMethod0(method, address, isVarargCall);
+    }
+
     public static void linkMethod0(Method method, long address, boolean isVarargCall) {
+        if (address == 0) {
+            throw new NullPointerException();
+        }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         final CallingConventionAdapter adapter = CallingConventionAdapter.get();
         Parameter[] parameters = method.getParameters();
