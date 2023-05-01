@@ -42,6 +42,12 @@ public class ManyArgumentTest {
         }
     }
 
+    @Test
+    public void testAutoDetectCallingConvention() {
+        MembraneLinker.linkClass(ManyArgumentTest.class);
+        test_sprintf();
+    }
+
     private boolean isX86_64() {
         return Architecture.get() == Architecture.X86_64;
     }

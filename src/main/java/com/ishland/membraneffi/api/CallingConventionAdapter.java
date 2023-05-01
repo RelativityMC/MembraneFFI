@@ -34,7 +34,7 @@ public interface CallingConventionAdapter {
             default: // includes windows
                 switch (Architecture.get()) {
                     case X86_64:
-                        return new com.ishland.membraneffi.impl.LinuxX86_64CallingConvention();
+                        return new com.ishland.membraneffi.impl.FramedX86_64CallingConvention();
                     default:
                         throw new UnsupportedOperationException("Unsupported architecture: " + Architecture.get());
                 }
